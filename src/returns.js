@@ -15,15 +15,23 @@ function openReturn(order, lines) {
     throw new Error('a return must cover at least one line');
   }
 
+  // Require a first delivery before checking item eligibility.
+  // This preserves both the delivery and final-clearance rules.
   if (order.deliveredAt === null) {
     throw new Error(
-        "Cannot return an order before delivery. Consider cancelling instead."
+        'Cannot return an order before delivery. Consider cancelling instead.'
     );
+  }
+
+  const returnableLines = lines.filter((line) => !line.finalClearance);
+
+  if (returnableLines.length === 0) {
+    throw new Error('a return cannot be opened for final-clearance items');
   }
 
   return {
     orderId: order.id,
-    lines,
+    lines: returnableLines,
     raisedAt: new Date().toISOString(),
     approvedBy: null,
     approvedAt: null,

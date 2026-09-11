@@ -11,14 +11,20 @@
  * @returns {object} the new return request
  */
 function openReturn(order, lines) {
-  if (lines.length === 0) {
+  if (!order) {
+    throw new Error('an order must be provided');
+  }
+  if (!Array.isArray(lines) || lines.length === 0) {
     throw new Error('a return must cover at least one line');
   }
-
+  const orderLines = order.lines || [];
   for (const line of lines) {
-    const orderLine = (order.lines || []).find((ol) => ol.sku === line.sku);
+    const orderLine = orderLines.find((ol) => ol.sku === line.sku);
     if (!orderLine) {
       throw new Error(`SKU ${line.sku} is not found in order ${order.id}`);
+    }
+    if (line.quantity <= 0) {
+      throw new Error(`quantity for SKU ${line.sku} must be greater than zero`);
     }
     if (line.quantity > orderLine.quantity) {
       throw new Error(

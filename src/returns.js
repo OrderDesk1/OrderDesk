@@ -20,6 +20,11 @@ function openReturn(order, lines) {
     if (!orderLine) {
       throw new Error(`SKU ${line.sku} is not found in order ${order.id}`);
     }
+    if (line.quantity > orderLine.quantity) {
+      throw new Error(
+        `cannot return ${line.quantity} units of SKU ${line.sku}, order only contained ${orderLine.quantity}`
+      );
+    }
   }
 
   return {

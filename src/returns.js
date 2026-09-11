@@ -30,6 +30,11 @@ function approve(returnRequest, clerkId, reason) {
     throw new Error('a refund approval must carry a reason');
   }
 
+  //Kiểm tra từ chối phê duyệt lại đơn đã được duyệt trước đó
+  if (returnRequest.approvedBy != null) {
+    throw new Error('this return request has already been approved');
+  }
+
   return {
     ...returnRequest,
     approvedBy: clerkId,

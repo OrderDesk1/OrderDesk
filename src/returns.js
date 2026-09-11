@@ -15,6 +15,12 @@ function openReturn(order, lines) {
     throw new Error('a return must cover at least one line');
   }
 
+  if (order.deliveredAt === null) {
+    throw new Error(
+        "Cannot return an order before delivery. Consider cancelling instead."
+    );
+  }
+
   return {
     orderId: order.id,
     lines,

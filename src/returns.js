@@ -30,8 +30,14 @@ function openReturn(order, lines) {
 }
 
 function approve(returnRequest, clerkId, reason) {
-  if (!reason) {
+  // Kiểm tra lý do bắt buộc và không được chuỗi rông/khoảng trắng
+  if (!reason || typeof reason !== 'string' || reason.trim() === '') {
     throw new Error('a refund approval must carry a reason');
+  }
+
+  //Kiểm tra từ chối phê duyệt lại đơn đã được duyệt trước đó
+  if (returnRequest.approvedBy != null) {
+    throw new Error('this return request has already been approved');
   }
 
   return {

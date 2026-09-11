@@ -15,6 +15,13 @@ function openReturn(order, lines) {
     throw new Error('a return must cover at least one line');
   }
 
+  for (const line of lines) {
+    const orderLine = (order.lines || []).find((ol) => ol.sku === line.sku);
+    if (!orderLine) {
+      throw new Error(`SKU ${line.sku} is not found in order ${order.id}`);
+    }
+  }
+
   return {
     orderId: order.id,
     lines,
@@ -23,6 +30,7 @@ function openReturn(order, lines) {
     approvedAt: null,
   };
 }
+
 
 function approve(returnRequest, clerkId, reason) {
   if (!reason) {

@@ -15,6 +15,17 @@ function openReturn(order, lines) {
     throw new Error('a return must cover at least one line');
   }
 
+  // Ví dụ logic kiểm tra 30 ngày trong hàm openReturn
+  if (order.deliveredAt) {
+    const deliveredDate = new Date(order.deliveredAt);
+    const now = new Date(); // hoặc ngày mở trả hàng
+    const diffInDays = (now - deliveredDate) / (1000 * 60 * 60 * 24);
+
+  if (diffInDays > 30) {
+    throw new Error('Cannot open return after 30 days of delivery');
+  }
+}
+
   return {
     orderId: order.id,
     lines,

@@ -11,6 +11,9 @@
  * @returns {object} the new return request
  */
 function openReturn(order, lines) {
+  if (order.status === 'cancelled') {
+    throw new Error('the order was cancelled');
+  }
   if (lines.length === 0) {
     throw new Error('a return must cover at least one line');
   }
